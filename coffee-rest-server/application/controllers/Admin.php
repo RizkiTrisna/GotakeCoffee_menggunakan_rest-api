@@ -1,0 +1,274 @@
+<?php
+
+class Admin extends CI_Controller
+{
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->model('User_model');
+        $this->load->model('Cafe_model');
+        $this->load->model('Status_sewa_model');
+        $this->load->model('Level_model');
+        $this->load->library('form_validation');
+        $this->load->library('session');
+    }
+
+    public function index()
+    {
+        $data['judul'] = 'Konfigurasi User';
+        $data['user'] = $this->User_model->getUser();
+        if ($this->input->post('keyword')) {
+            $data['user'] = $this->User_model->findUser();
+        }
+        $this->load->view('templates/header', $data);
+        $this->load->view('admin/index', $data);
+        $this->load->view('templates/footer');
+    }
+
+    //User=====================================================================================================
+
+    public function adminUser()
+    {
+        $data['judul'] = 'Konfigurasi User';
+        $data['user'] = $this->User_model->getUser();
+        if ($this->input->post('keyword')) {
+            $data['user'] = $this->User_model->findUser();
+        }
+        $this->load->view('templates/header', $data);
+        $this->load->view('admin/admin-user/index', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function insertUser()
+    {
+        $data['judul'] = 'Form Tambah Data User';
+
+        $this->form_validation->set_rules('nama', 'Nama', 'required');
+
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+
+        if ($this->form_validation->run() == false) {
+            $data['judul'] = 'Form Insert User';
+            $data['resultLevel'] = $this->Level_model->getLevel();
+            $data['resultCafe'] = $this->Cafe_model->getCafe();
+            $this->load->view('templates/header', $data);
+            $this->load->view('admin/admin-user/insert', $data);
+            $this->load->view('templates/footer');
+        } else {
+            if ($this->input->post('id_cafe', true) == 0) {
+                $dataUser = [
+                    "id_user" => $this->input->post('id_user', true),
+                    "nama" => $this->input->post('nama', true),
+                    "email" => $this->input->post('email', true),
+                    "nohp" => $this->input->post('nohp', true),
+                    "no_ktp" => $this->input->post('no_ktp', true),
+                    "alamat" => $this->input->post('alamat', true),
+                    "id_level" => $this->input->post('id_level', true),
+                    "password" => $this->input->post('password', true)
+    
+                ];
+            } else {
+                $dataUser = [
+                    "id_user" => $this->input->post('id_user', true),
+                    "nama" => $this->input->post('nama', true),
+                    "email" => $this->input->post('email', true),
+                    "nohp" => $this->input->post('nohp', true),
+                    "no_ktp" => $this->input->post('no_ktp', true),
+                    "alamat" => $this->input->post('alamat', true),
+                    "id_level" => $this->input->post('id_level', true),
+                    "id_cafe" => $this->input->post('id_cafe', true),
+                    "password" => $this->input->post('password', true)
+    
+                ];
+            }
+            $this->User_model->insertUser($dataUser);
+            $this->session->set_flashdata('flash', 'Ditambahkan');
+            redirect('admin/adminUser');
+        }
+    }
+
+    public function deleteUser($id)
+    {
+        $this->User_model->deleteUser($id);
+        $this->session->set_flashdata('flash', 'Dihapus');
+        redirect('admin/adminUser');
+    }
+
+    public function detailUser($id)
+    {
+        $data['judul'] = 'Form Update Data User';
+        $data['resultUser'] = $this->User_model->getUser($id);
+        $data['resultLevel'] = $this->Level_model->getLevel();
+        $data['resultCafe'] = $this->Cafe_model->getCafe();
+        $this->load->view('templates/header', $data);
+        $this->load->view('admin/admin-user/update', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function showInsertForm()
+    {
+        $data['judul'] = 'Form Insert User';
+        $data['resultLevel'] = $this->Level_model->getLevel();
+        $data['resultCafe'] = $this->Cafe_model->getCafe();
+        $this->load->view('templates/header', $data);
+        $this->load->view('admin/admin-user/insert', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function updateUser()
+    {
+        $data['judul'] = 'Form Update Data User';
+        // $data['jurusan'] = ['Teknik Informatika', 'Teknik Mesin', 'Teknik Planologi', 'Teknik Pangan', 'Teknik Lingkungan'];
+
+        $this->form_validation->set_rules('id_user', 'ID User', 'required');
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+        if ($this->form_validation->run() == false) {
+            $this->load->view('templates/header', $data);
+            $this->load->view('admin/admin-user/update', $data);
+            $this->load->view('templates/footer');
+            echo "Gagal";
+        } else {
+            $idcafe = $this->input->post('id_cafe', true);
+            if ($this->input->post('id_cafe', true) == 0 ) {
+                $dataUser = [
+                    "id_user" => $this->input->post('id_user', true),
+                    "nama" => $this->input->post('nama', true),
+                    "email" => $this->input->post('email', true),
+                    "nohp" => $this->input->post('nohp', true),
+                    "no_ktp" => $this->input->post('no_ktp', true),
+                    "alamat" => $this->input->post('alamat', true),
+                    "id_level" => $this->input->post('id_level', true),
+                    "id_cafe" => null,
+                    "password" => $this->input->post('password', true)
+    
+                ];
+            } else {
+                $dataUser = [
+                    "id_user" => $this->input->post('id_user', true),
+                    "nama" => $this->input->post('nama', true),
+                    "email" => $this->input->post('email', true),
+                    "nohp" => $this->input->post('nohp', true),
+                    "no_ktp" => $this->input->post('no_ktp', true),
+                    "alamat" => $this->input->post('alamat', true),
+                    "id_level" => $this->input->post('id_level', true),
+                    "id_cafe" => $this->input->post('id_cafe', true),
+                    "password" => $this->input->post('password', true)
+    
+                ];
+            }
+            $status = $this->User_model->updateUser($dataUser, $this->input->post('id_user', true));
+            if ($status == true) {
+                $this->session->set_flashdata('flash', 'Diubah');
+
+                redirect('admin/adminUser');
+
+            } else {
+                $this->session->set_flashdata('error', 'Diubah'.$idcafe);
+                redirect('admin/adminUser');
+            }
+        }
+    }
+
+    //Cafe=====================================================================================================
+    
+    public function adminCafe()
+    {
+        $data['judul'] = 'Konfigurasi User';
+        $data['cafe'] = $this->Cafe_model->getCafe();
+        $data['sewa'] = $this->Status_sewa_model->getStatus();
+        if ($this->input->post('keyword')) {
+            $data['cafe'] = $this->Cafe_model->findCafe();
+        }
+        $this->load->view('templates/header', $data);
+        $this->load->view('admin/admin-cafe/index', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function insertCafe()
+    {
+        // $data['judul'] = 'Form Tambah Data Cafe';
+
+        // if ($this->form_validation->run() == false) {
+        //     $data['judul'] = 'Form Insert Cafe';
+        //     $data['resultStatus'] = $this->Status_sewa_model->getStatus();
+
+        //     $this->load->view('templates/header', $data);
+        //     $this->load->view('admin/admin-cafe/insert', $data);
+        //     $this->load->view('templates/footer');
+        //     echo "Failed";
+        // } else {
+            $this->Cafe_model->insertCafe();
+            $this->session->set_flashdata('flash', 'Ditambahkan');
+            redirect('admin/adminCafe');
+            echo "Success";
+        // }
+    }
+
+    public function deleteCafe($id)
+    {
+        $this->Cafe_model->deleteCafe($id);
+        $this->session->set_flashdata('flash', 'Dihapus');
+        redirect('admin/adminCafe');
+    }
+
+    public function detailCafe($id)
+    {
+        $data['judul'] = 'Form Update Data Cafe';
+        $data['resultCafe'] = $this->Cafe_model->getCafe($id);
+        $data['resultStatus'] = $this->Status_sewa_model->getStatus();
+        $this->load->view('templates/header', $data);
+        $this->load->view('admin/admin-cafe/update', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function showInsertCafeForm()
+    {
+        $data['judul'] = 'Form Insert Cafe';
+        $data['resultStatus'] = $this->Status_sewa_model->getStatus();
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('admin/admin-cafe/insert', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function updateCafe()
+    {
+        // $data['judul'] = 'Form Update Data User';
+        // // $data['jurusan'] = ['Teknik Informatika', 'Teknik Mesin', 'Teknik Planologi', 'Teknik Pangan', 'Teknik Lingkungan'];
+
+        // $this->form_validation->set_rules('id_user', 'ID User', 'required');
+        // $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+        // if ($this->form_validation->run() == false) {
+        //     $this->load->view('templates/header', $data);
+        //     $this->load->view('admin/admin-user/update', $data);
+        //     $this->load->view('templates/footer');
+        //     echo "Gagal";
+        // } else {
+            $dataCafe = [
+                'id_cafe' => $this->input->post('id_cafe'),
+                'nm_cafe' => $this->input->post('nm_cafe'),
+                'fasilitas' => $this->input->post('fasilitas'),
+                'daftar_menu' => $this->input->post('daftar_menu'),
+                'jam_buka' => $this->input->post('jam_buka'),
+                'jam_tutup' => $this->input->post('jam_tutup'),
+                'alamat' => $this->input->post('alamat'),
+                'no_wa' => $this->input->post('no_wa'),
+                'kursi_sisa' => $this->input->post('kursi_sisa'),
+                'kursi_max' => $this->input->post('kursi_max'),
+                'id_status_sewa' => $this->input->post('id_status_sewa'),
+                'harga_sewa_per_kursi' => $this->input->post('harga_sewa_per_kursi'),
+                'harga_sewa_cafe' => $this->input->post('harga_sewa_cafe'),
+                'gambar' => $this->input->post('gambar')
+            ];
+            $status = $this->Cafe_model->updateCafe($dataCafe, $this->input->post('id_cafe'));
+            if ($status == true) {
+                $this->session->set_flashdata('flash', 'Diubah');
+                redirect('admin/adminCafe');
+            } else {
+                $this->session->set_flashdata('error', 'Diubah');
+                var_dump($status);
+                // redirect('admin/adminCafe');
+            }
+        // }
+    }
+}
