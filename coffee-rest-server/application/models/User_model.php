@@ -10,6 +10,14 @@ class User_model extends CI_Model
             return $this->db->get_where('tb_user', ['id_user' => $id_user])->result_array();
         }
     }
+    public function getUserByEmail($email = null)
+    {
+        if ($email === null) {
+            return null;
+        } else {
+            return $this->db->get_where('tb_user', ['email' => $email])->result_array();
+        }
+    }
 
     public function deleteUser($id_user)
     {

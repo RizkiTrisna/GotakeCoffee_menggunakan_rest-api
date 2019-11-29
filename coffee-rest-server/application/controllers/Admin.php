@@ -21,8 +21,33 @@ class Admin extends CI_Controller
         if ($this->input->post('keyword')) {
             $data['user'] = $this->User_model->findUser();
         }
+        $this->load->view('admin/login/index', $data);
+    }
+
+    public function cekLogin()
+    {
+        if ($this->input->post('email', true)) {
+            $email = $this->input->post('email', true);
+            $password = $this->input->post('password', true);
+            $dataUser = $this->User_model->getUserByEmail($email);
+            if ($dataUser != null && $password == $dataUser[0]['password'] && $email == $dataUser[0]['email']) {
+                $this->session->set_flashdata('flash', 'Login');
+                redirect('admin/adminUser');
+                return true;
+            } else { 
+                $this->session->set_flashdata('error', 'Cocok');
+                redirect('admin');
+                return false;
+            }
+        }
+    }
+
+    public function dashboard()
+    {
+        $data['judul'] = 'Konfigurasi User';
+        $data['user'] = $this->User_model->getUser();
         $this->load->view('templates/header', $data);
-        $this->load->view('admin/index', $data);
+        $this->load->view('admin/dashboard', $data);
         $this->load->view('templates/footer');
     }
 
@@ -286,7 +311,7 @@ class Admin extends CI_Controller
         //     ];
         //     echo $this->input->post('old_image') ."Lama";
         // }
-        
+
         $status = $this->Cafe_model->updateCafe($dataCafe, $this->input->post('id_cafe'));
         if ($status == true) {
             $this->session->set_flashdata('flash', 'Diubah');

@@ -31,7 +31,7 @@
         <div class="list-group list-group-flush">
           <a href="<?= base_url(); ?>admin/adminUser" class="list-group-item list-group-item-action bg-light">Konfigurasi User</a>
           <a href="<?= base_url(); ?>admin/adminCafe" class="list-group-item list-group-item-action bg-light">Konfigurasi Cafe</a>
-          <a href="<?= base_url(); ?>admin/index" class="list-group-item list-group-item-action bg-light">Overview</a>
+          <a href="<?= base_url(); ?>admin/dashboard" class="list-group-item list-group-item-action bg-light">Overview</a>
         </div>
       </div>
       <!-- /#sidebar-wrapper -->
