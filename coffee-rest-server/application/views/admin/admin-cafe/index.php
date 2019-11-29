@@ -31,7 +31,7 @@ if ($this->session->flashdata('flash')) {
         <?php foreach ($cafe as $data) : ?>
             <tr>
                 <th scope="row"><?= $data['id_cafe']; ?></th>
-                <td><a href="<?= base_url(); ?>admin/detailUser/<?= $data['id_cafe']; ?>" style="color: inherit;"><?= $data['nm_cafe']; ?></a></td>
+                <td><a href="<?= base_url(); ?>admin/detailCafe/<?= $data['id_cafe']; ?>" style="color: inherit;"><?= $data['nm_cafe']; ?></a></td>
                 <td><?= $data['alamat']; ?></td>
                 <td><?= $data['no_wa']; ?></td>
                 <td><?= $data['kursi_sisa']; ?> / <?= $data['kursi_max']; ?></td>

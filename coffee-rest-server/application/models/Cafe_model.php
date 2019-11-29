@@ -24,4 +24,6 @@ class Cafe_model extends CI_Model
         $this->db->update('tb_cafe', $data, ['id_cafe' => $id_cafe]);
         return $this->db->affected_rows();
     }
+
+    
 } 

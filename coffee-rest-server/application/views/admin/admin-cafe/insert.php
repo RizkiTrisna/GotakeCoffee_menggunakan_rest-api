@@ -2,7 +2,8 @@
 
 <h1 class="mt-4">Insert Cafe</h1>
 <br>
-<form method="post" action="<?= base_url(); ?>admin/insertCafe">
+<?php echo form_open_multipart(base_url().'admin/insertCafe');?>
+<!-- <form method="post" action="<?= base_url(); ?>admin/insertCafe" > -->
     <div class="form-group row">
         <label for="id_cafe" class="col-sm-2 col-form-label">ID Cafe</label>
         <div class="col-sm-8">
@@ -92,7 +93,7 @@
             <div class="form-group">
 
                 <select class="form-control" id="status_sewa" selected="0" name="id_status_sewa">
-                    <?php foreach ($resultStatus['data'] as $dataStatus) : ?>
+                    <?php foreach ($resultStatus as $dataStatus) : ?>
                         <option value="<?= $dataStatus['id_status']; ?>"><?= $dataStatus['nm_status']; ?></option>
                     <?php endforeach; ?>
                 </select>
@@ -115,16 +116,17 @@
     </div>
 
     <div class="form-group row">
-        <label for="gambar" class="col-sm-2 col-form-label">Example file input</label>
+        <label for="name" class="col-sm-2 col-form-label">Example file input</label>
         <div class="col-sm-8">
-            <input type="file" class="form-control-file" name="gambar" id="gambar">
+            <input type="file" class="form-control-file" name="image" id="image">
         </div>
     </div>
 
     <div class="col-sm-10">
         <button class="btn btn-success" type="submit" style="float:right;">Tambah Cafe</button>
     </div>
-</form>
+<!-- </form> -->
+<?= form_close();?>
 
 
 <!-- End Content -->
